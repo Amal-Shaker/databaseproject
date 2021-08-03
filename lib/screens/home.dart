@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sticky_notes/detail.dart';
+import 'package:sticky_notes/helper/db_helper.dart';
+import 'package:sticky_notes/model/notes.dart';
+import 'package:sticky_notes/screens/detail.dart';
+import 'package:sticky_notes/screens/showDetail.dart';
 import 'package:sticky_notes/widget/note_widget.dart';
 
 class Home extends StatelessWidget {
@@ -35,10 +38,7 @@ class Home extends StatelessWidget {
                       Container(
                         margin: EdgeInsets.only(
                           left: 16.w,
-                          // top: 60.h,
                         ),
-                        // width: 50.w,
-                        // height: 26.h,
                         child: Text(
                           'My Notes',
                           textAlign: TextAlign.left,
@@ -68,15 +68,55 @@ class Home extends StatelessWidget {
                 ),
               ],
             ),
-
-            Note_widget(),
-
             Container(
-              margin: EdgeInsets.only(bottom: 0.w, top: 747.w
+              margin: EdgeInsets.only(top: 228.w, left: 10.w, right: 10.w),
+              width: 375.w,
+              height: 500.w,
+              color: Colors.transparent,
+              child: Material(
+                color: Colors.transparent,
+                child: FutureBuilder(
+                    future: DbHelper.dbHelper.getAllNotes(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        List<Notes> notes = snapshot.data;
+                        return GridView.builder(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  //  maxCrossAxisExtent: 200.w,
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 3.w / 2.w,
+                                  crossAxisSpacing: 20.w,
+                                  mainAxisSpacing: 20.w),
+                          itemCount: notes.length,
+                          itemBuilder: (context, index) {
+                            return Note_widget(
+                              title: notes[index].title,
+                              contain: notes[index].contain,
+                              date: notes[index].date,
+                              function: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => ShowDetail(
+                                          notes: Notes(
+                                              id: notes[index].id,
+                                              title: notes[index].title,
+                                              contain: notes[index].contain,
+                                              date: notes[index].date),
+                                        )));
+                              },
+                            );
+                          },
+                        );
+                      }
+                    }),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 713.w
                   //  top: 730.w,
                   ),
               width: 375.w,
-              height: 65.w,
+              height: 55.w,
               padding: EdgeInsets.only(top: 20.w),
               // height: 100,
               decoration: BoxDecoration(
@@ -89,7 +129,7 @@ class Home extends StatelessWidget {
                 children: [
                   GestureDetector(
                     child: Container(
-                      margin: EdgeInsets.only(left: 15.w, top: 20.w),
+                      margin: EdgeInsets.only(left: 15.w),
                       width: 24.w,
                       height: 24.w,
                       decoration: BoxDecoration(
@@ -136,33 +176,12 @@ class Home extends StatelessWidget {
                     ),
                     onTap: () {},
                   )
-                  // IconButton(
-                  //     onPressed: () {},
-                  //     icon: Icon(
-                  //       Icons.settings,
-                  //       size: 24,
-                  //       color: Color(0xFFD3D3D3),
-                  //     )),
-                  // IconButton(
-                  //     onPressed: () {},
-                  //     icon: Icon(
-                  //       Icons.folder_outlined,
-                  //       size: 24,
-                  //       color: Color(0xFFD3D3D3),
-                  //     )),
-                  // IconButton(
-                  //     onPressed: () {},
-                  //     icon: Icon(
-                  //       Icons.camera_enhance,
-                  //       size: 50,
-                  //       color: Color(0xFFD3D3D3),
-                  //     ))
                 ],
               ),
             ),
             Center(
               child: Container(
-                margin: EdgeInsets.only(top: 720.w),
+                margin: EdgeInsets.only(top: 680.w),
                 child: FloatingActionButton(
                     backgroundColor: Color(0xFFFA8704),
                     child: Icon(Icons.add),
@@ -172,10 +191,6 @@ class Home extends StatelessWidget {
                     }),
               ),
             ),
-            // Container(
-            //   margin: EdgeInsets.only(top: 30),
-            //   child: Text('hello'),
-            // )
           ],
         ),
       ),

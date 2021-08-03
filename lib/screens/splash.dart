@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:mysplashscreen/mysplashscreen.dart';
 //import 'package:splashscreen/splashscreen.dart';
 import 'package:your_splash/your_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'home.dart';
 
-class MyApp extends StatelessWidget {
+class MySplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SplashScreen.timed(
+    return Scaffold(
+      body: SplashScreen.timed(
         seconds: 5,
         route: MaterialPageRoute(builder: (_) => Home()),
         body: Scaffold(
